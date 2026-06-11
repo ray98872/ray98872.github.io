@@ -11,15 +11,18 @@ import {
 } from "lucide-react";
 import { profile } from "../data/profile.js";
 import Reveal from "./Reveal.jsx";
+import ShaderScene from "./ShaderScene.jsx";
+import ShaderOverlay from "./ShaderOverlay.jsx";
 
-function Card({ href, label, title, desc, meta, graphic, span = "", delay = 0, children }) {
-  const Tag = href ? "a" : "div";
+function Card({ href, onClick, label, title, desc, meta, graphic, span = "", delay = 0, children }) {
+  const Tag = href ? "a" : onClick ? "button" : "div";
   const external = href && href.startsWith("http");
   return (
     <Reveal delay={delay} className={span}>
       <Tag
         {...(href ? { href, ...(external ? { target: "_blank", rel: "noreferrer" } : {}) } : {})}
-        className="bento-card group h-full"
+        {...(onClick ? { onClick, type: "button" } : {})}
+        className={`bento-card group h-full w-full ${onClick ? "cursor-pointer text-left" : ""}`}
       >
         {graphic && (
           <div className="card-graphic relative h-40 shrink-0 overflow-hidden sm:h-44" aria-hidden="true">
@@ -29,7 +32,7 @@ function Card({ href, label, title, desc, meta, graphic, span = "", delay = 0, c
         <div className="flex flex-1 flex-col p-6">
           <div className="flex items-baseline justify-between gap-4">
             <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-dim">{label}</p>
-            {href && <ArrowUpRight size={15} className="card-arrow shrink-0 text-dim" aria-hidden="true" />}
+            {(href || onClick) && <ArrowUpRight size={15} className="card-arrow shrink-0 text-dim" aria-hidden="true" />}
           </div>
           {title && <h2 className="mt-2 text-lg font-medium tracking-[-0.01em] text-cream">{title}</h2>}
           {desc && <p className="mt-1.5 text-[13.5px] leading-relaxed text-faint">{desc}</p>}
@@ -119,68 +122,6 @@ function ConformalBand() {
   );
 }
 
-function BlueGreenFlow() {
-  return (
-    <svg viewBox="0 0 320 176" className="absolute inset-0 h-full w-full">
-      {/* routes */}
-      <path d="M 48 88 C 90 88, 100 88, 138 88" fill="none" stroke="rgba(242,240,234,0.12)" strokeWidth="1.4" />
-      <path d="M 182 80 C 215 62, 230 56, 262 52" fill="none" stroke="rgba(91,157,217,0.35)" strokeWidth="1.4" />
-      <path d="M 182 96 C 215 114, 230 120, 262 124" fill="none" stroke="rgba(93,191,138,0.35)" strokeWidth="1.4" />
-      {/* client */}
-      <rect x="22" y="74" width="26" height="28" rx="7" fill="rgba(242,240,234,0.04)" stroke="rgba(242,240,234,0.14)" />
-      <circle cx="35" cy="84" r="3.5" fill="none" stroke="#98948a" strokeWidth="1.2" />
-      <path d="M 29 96 C 29 91, 41 91, 41 96" fill="none" stroke="#98948a" strokeWidth="1.2" />
-      {/* router */}
-      <rect x="138" y="70" width="44" height="36" rx="8" fill="rgba(201,126,78,0.08)" stroke="rgba(201,126,78,0.4)" />
-      <text x="160" y="92" textAnchor="middle" fontSize="10" fill="#c97e4e" fontFamily="JetBrains Mono, monospace">
-        {"⇄"}
-      </text>
-      {/* blue slot */}
-      <rect x="262" y="38" width="40" height="26" rx="6" fill="rgba(91,157,217,0.08)" stroke="rgba(91,157,217,0.45)" />
-      <text x="282" y="55" textAnchor="middle" fontSize="8.5" fill="#5b9dd9" fontFamily="JetBrains Mono, monospace">
-        v1
-      </text>
-      {/* green slot */}
-      <rect x="262" y="110" width="40" height="26" rx="6" fill="rgba(93,191,138,0.08)" stroke="rgba(93,191,138,0.45)" />
-      <text x="282" y="127" textAnchor="middle" fontSize="8.5" fill="#5dbf8a" fontFamily="JetBrains Mono, monospace">
-        v2
-      </text>
-      {/* travelling requests */}
-      <circle r="2.4" fill="#5b9dd9" opacity="0.9">
-        <animateMotion dur="2.4s" repeatCount="indefinite" path="M 48 88 C 90 88, 100 88, 138 88" />
-      </circle>
-      <circle r="2.4" fill="#5b9dd9" opacity="0.9">
-        <animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M 182 80 C 215 62, 230 56, 262 52" />
-      </circle>
-      <circle r="2.4" fill="#5dbf8a" opacity="0.9">
-        <animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite" path="M 48 88 C 90 88, 100 88, 138 88" />
-      </circle>
-      <circle r="2.4" fill="#5dbf8a" opacity="0.9">
-        <animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite" path="M 182 96 C 215 114, 230 120, 262 124" />
-      </circle>
-    </svg>
-  );
-}
-
-function Sphere() {
-  return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div
-        className="h-24 w-24 rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle at 32% 30%, #f2f0ea 0%, #c97e4e 28%, #5b3a22 62%, #17120d 100%)",
-          boxShadow: "0 24px 36px -12px rgba(0,0,0,0.7), 0 0 50px -10px rgba(201,126,78,0.35)",
-        }}
-      />
-      <div
-        className="absolute bottom-7 h-3 w-32 rounded-[50%]"
-        style={{ background: "radial-gradient(ellipse, rgba(0,0,0,0.55), transparent 70%)" }}
-      />
-    </div>
-  );
-}
-
 function ContactCard({ delay }) {
   const [copied, setCopied] = useState(false);
   const copyEmail = async (e) => {
@@ -232,6 +173,7 @@ function ContactCard({ delay }) {
 }
 
 export default function Bento() {
+  const [shaderOpen, setShaderOpen] = useState(false);
   return (
     <section id="work" className="grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-6">
       <Card
@@ -278,16 +220,6 @@ export default function Bento() {
       />
       <Card
         span="lg:col-span-2"
-        href="https://ray98872.github.io/zerodowntime/"
-        label="Cloud engineering"
-        title="Zero-downtime blue-green deploys"
-        desc="Updating a live GenAI Copilot's RAG index on Azure Container Apps without dropping traffic — C# API, GitHub Actions pipeline, interactive demo."
-        meta="c# · azure · ci/cd · live demo"
-        graphic={<BlueGreenFlow />}
-        delay={140}
-      />
-      <Card
-        span="lg:col-span-2"
         href="/papers/gpu-accelerated-conformal-prediction.pdf"
         label="MSc dissertation · 2024"
         title="GPU-Accelerated Conformal Prediction"
@@ -298,12 +230,12 @@ export default function Bento() {
       />
       <Card
         span="lg:col-span-2"
-        href="/papers/introduction-to-sphere-tracing.pdf"
-        label="BSc dissertation · 2022"
+        onClick={() => setShaderOpen(true)}
+        label="BSc dissertation · 2022 · live"
         title="Introduction to Sphere Tracing"
-        desc="A sphere-traced 3D scene in GLSL, with the SDF mathematics derived from first principles."
-        meta="glsl · mathematics · pdf"
-        graphic={<Sphere />}
+        desc="The dissertation's GLSL raymarcher, running live on your GPU. Click to open and drag to orbit."
+        meta="glsl · webgl · interactive"
+        graphic={<ShaderScene maxDpr={1} className="h-full w-full" />}
         delay={200}
       />
       <Card
@@ -329,6 +261,7 @@ export default function Bento() {
         <p className="mt-auto pt-4 font-mono text-[11px] text-dim">daily drivers, not logos</p>
       </Card>
       <ContactCard delay={320} />
+      <ShaderOverlay open={shaderOpen} onClose={() => setShaderOpen(false)} />
     </section>
   );
 }
