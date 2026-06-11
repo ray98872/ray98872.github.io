@@ -5,7 +5,7 @@ export const profile = {
   lede: "I build production agentic AI and LLM systems in C#/.NET and Azure — pairing an MSc in Artificial Intelligence with a BSc in Mathematics.",
   about: [
     "I'm an AI developer at ICS.AI, where I ship production AI: a .NET application that turns raw phone-call transcripts into automated insights, an agentic platform that automates end-to-end customer service workflows, and an LLM-powered bid generator. I was promoted from AI Associate within twelve months of joining.",
-    "Away from work I run a self-hosted Linux home server for my media library, photos and network services — and experiment with running generative AI models locally on my own hardware, mostly for game development.",
+    "Away from work I run a self-hosted Linux home server for my media library and network services — and experiment with running generative AI models locally on my own hardware, mostly for game development.",
   ],
   email: "raihan.mahbub98872@gmail.com",
   skills: [

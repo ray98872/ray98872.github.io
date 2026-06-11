@@ -62,7 +62,7 @@ function PinField() {
 }
 
 function ServerRack() {
-  const rows = ["jellyfin", "immich", "pi-hole", "gluetun"];
+  const rows = ["jellyfin", "pi-hole", "gluetun", "homepage"];
   return (
     <div className="absolute inset-0 flex flex-col justify-center gap-2 px-8">
       {rows.map((name, i) => (
@@ -220,7 +220,7 @@ export default function Bento() {
         href="https://ray98872.github.io/homelab/"
         label="Personal infrastructure"
         title="Self-hosted home server"
-        desc="Jellyfin, Immich, Pi-hole and Gluetun in Docker — my media library, photos and DNS, self-hosted. Read the full stack breakdown."
+        desc="Jellyfin, Pi-hole and Gluetun in Docker — my media library and DNS, self-hosted. Read the full stack breakdown."
         meta="docker · linux · write-up"
         graphic={<ServerRack />}
         delay={120}
