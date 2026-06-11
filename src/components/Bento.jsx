@@ -119,6 +119,49 @@ function ConformalBand() {
   );
 }
 
+function BlueGreenFlow() {
+  return (
+    <svg viewBox="0 0 320 176" className="absolute inset-0 h-full w-full">
+      {/* routes */}
+      <path d="M 48 88 C 90 88, 100 88, 138 88" fill="none" stroke="rgba(242,240,234,0.12)" strokeWidth="1.4" />
+      <path d="M 182 80 C 215 62, 230 56, 262 52" fill="none" stroke="rgba(91,157,217,0.35)" strokeWidth="1.4" />
+      <path d="M 182 96 C 215 114, 230 120, 262 124" fill="none" stroke="rgba(93,191,138,0.35)" strokeWidth="1.4" />
+      {/* client */}
+      <rect x="22" y="74" width="26" height="28" rx="7" fill="rgba(242,240,234,0.04)" stroke="rgba(242,240,234,0.14)" />
+      <circle cx="35" cy="84" r="3.5" fill="none" stroke="#98948a" strokeWidth="1.2" />
+      <path d="M 29 96 C 29 91, 41 91, 41 96" fill="none" stroke="#98948a" strokeWidth="1.2" />
+      {/* router */}
+      <rect x="138" y="70" width="44" height="36" rx="8" fill="rgba(201,126,78,0.08)" stroke="rgba(201,126,78,0.4)" />
+      <text x="160" y="92" textAnchor="middle" fontSize="10" fill="#c97e4e" fontFamily="JetBrains Mono, monospace">
+        {"⇄"}
+      </text>
+      {/* blue slot */}
+      <rect x="262" y="38" width="40" height="26" rx="6" fill="rgba(91,157,217,0.08)" stroke="rgba(91,157,217,0.45)" />
+      <text x="282" y="55" textAnchor="middle" fontSize="8.5" fill="#5b9dd9" fontFamily="JetBrains Mono, monospace">
+        v1
+      </text>
+      {/* green slot */}
+      <rect x="262" y="110" width="40" height="26" rx="6" fill="rgba(93,191,138,0.08)" stroke="rgba(93,191,138,0.45)" />
+      <text x="282" y="127" textAnchor="middle" fontSize="8.5" fill="#5dbf8a" fontFamily="JetBrains Mono, monospace">
+        v2
+      </text>
+      {/* travelling requests */}
+      <circle r="2.4" fill="#5b9dd9" opacity="0.9">
+        <animateMotion dur="2.4s" repeatCount="indefinite" path="M 48 88 C 90 88, 100 88, 138 88" />
+      </circle>
+      <circle r="2.4" fill="#5b9dd9" opacity="0.9">
+        <animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M 182 80 C 215 62, 230 56, 262 52" />
+      </circle>
+      <circle r="2.4" fill="#5dbf8a" opacity="0.9">
+        <animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite" path="M 48 88 C 90 88, 100 88, 138 88" />
+      </circle>
+      <circle r="2.4" fill="#5dbf8a" opacity="0.9">
+        <animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite" path="M 182 96 C 215 114, 230 120, 262 124" />
+      </circle>
+    </svg>
+  );
+}
+
 function Sphere() {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
@@ -232,6 +275,16 @@ export default function Bento() {
         meta="docker · linux · write-up"
         graphic={<ServerRack />}
         delay={120}
+      />
+      <Card
+        span="lg:col-span-2"
+        href="https://ray98872.github.io/zerodowntime/"
+        label="Cloud engineering"
+        title="Zero-downtime blue-green deploys"
+        desc="Updating a live GenAI Copilot's RAG index on Azure Container Apps without dropping traffic — C# API, GitHub Actions pipeline, interactive demo."
+        meta="c# · azure · ci/cd · live demo"
+        graphic={<BlueGreenFlow />}
+        delay={140}
       />
       <Card
         span="lg:col-span-2"
