@@ -202,8 +202,15 @@ export default function Bento() {
           <p className="flex items-start gap-2 text-[12.5px]">
             <GraduationCap size={13} className="mt-0.5 shrink-0 text-copper" aria-hidden="true" />
             <span>
-              MSc Artificial Intelligence, Royal Holloway
-              <span className="block font-mono text-[10px] text-dim">BSc Mathematics w/ CS, Brunel</span>
+              MSc Artificial Intelligence
+              <span className="block font-mono text-[10px] text-dim">Royal Holloway, University of London</span>
+            </span>
+          </p>
+          <p className="flex items-start gap-2 text-[12.5px]">
+            <GraduationCap size={13} className="mt-0.5 shrink-0 text-copper" aria-hidden="true" />
+            <span>
+              BSc Mathematics with Computer Science
+              <span className="block font-mono text-[10px] text-dim">Brunel University London</span>
             </span>
           </p>
         </div>

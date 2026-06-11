@@ -5,7 +5,7 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between py-6">
       <a href="/" className="fade-in font-display text-lg italic text-cream" aria-label="Home">
-        ray mahbub
+        Ray Mahbub
       </a>
       <div className="fade-in flex items-center gap-5" style={{ "--d": "100ms" }}>
         <a

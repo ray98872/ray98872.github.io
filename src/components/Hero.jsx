@@ -24,9 +24,9 @@ export default function Hero() {
         </span>
       </h1>
       <p className="fade-in mt-6 max-w-xl text-base leading-relaxed text-faint" style={{ "--d": "750ms" }}>
-        I'm <span className="text-cream">Ray Mahbub</span> — AI developer at ICS.AI shipping LLM
-        systems in C#/.NET and Azure, with an MSc in AI and a BSc in Mathematics. The work below is
-        what I build when nobody's asking.
+        I'm <span className="text-cream">Ray Mahbub</span> — AI developer at ICS.AI, working in
+        C#/.NET and Azure. Below: a web platform live in production, a self-hosted homelab, two
+        dissertations, and a raymarcher running on your GPU.
       </p>
     </section>
   );
