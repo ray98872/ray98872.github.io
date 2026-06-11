@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-  ArrowUpRight,
-  MapPin,
-  FileText,
-  Copy,
-  Check,
-  Mail,
-  Briefcase,
-  GraduationCap,
-} from "lucide-react";
+import { ArrowUpRight, MapPin, Briefcase, GraduationCap } from "lucide-react";
 import { profile } from "../data/profile.js";
 import Reveal from "./Reveal.jsx";
 import ShaderScene from "./ShaderScene.jsx";
@@ -122,56 +113,6 @@ function ConformalBand() {
   );
 }
 
-function ContactCard({ delay }) {
-  const [copied, setCopied] = useState(false);
-  const copyEmail = async (e) => {
-    e.preventDefault();
-    try {
-      await navigator.clipboard.writeText(profile.email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  };
-  return (
-    <Reveal delay={delay} className="h-full">
-      <div className="bento-card h-full">
-        <div className="flex flex-1 flex-col p-6">
-          <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-dim">Contact</p>
-          <h2 className="mt-2 text-lg font-medium text-cream">Say hello</h2>
-          <p className="mt-1.5 text-[13.5px] leading-relaxed text-faint">
-            Roles, projects, or questions about the home lab.
-          </p>
-          <div className="mt-auto flex flex-col gap-2 pt-5">
-            <a
-              href={`mailto:${profile.email}`}
-              className="inline-flex items-center gap-2 break-all font-mono text-[12px] text-copper-soft transition-colors hover:text-copper"
-            >
-              <Mail size={13} className="shrink-0" aria-hidden="true" /> {profile.email.toLowerCase()}
-            </a>
-            <button
-              type="button"
-              onClick={copyEmail}
-              className="inline-flex w-fit cursor-pointer items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] text-dim transition-colors hover:text-copper"
-            >
-              {copied ? (
-                <>
-                  <Check size={11} aria-hidden="true" /> copied
-                </>
-              ) : (
-                <>
-                  <Copy size={11} aria-hidden="true" /> copy address
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-    </Reveal>
-  );
-}
-
 export default function Bento() {
   const [shaderOpen, setShaderOpen] = useState(false);
   return (
@@ -254,7 +195,7 @@ export default function Bento() {
         graphic={<PixelGrid />}
         delay={240}
       />
-      <Card span="lg:col-span-2" label="Stack" delay={280}>
+      <Card span="lg:col-span-4" label="Stack" delay={280}>
         <ul className="mt-3 flex flex-wrap gap-1.5">
           {profile.skills.map((skill) => (
             <li
@@ -267,7 +208,6 @@ export default function Bento() {
         </ul>
         <p className="mt-auto pt-4 font-mono text-[11px] text-dim">daily drivers, not logos</p>
       </Card>
-      <ContactCard delay={320} />
       <ShaderOverlay open={shaderOpen} onClose={() => setShaderOpen(false)} />
     </section>
   );

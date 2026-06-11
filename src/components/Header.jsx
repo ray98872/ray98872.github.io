@@ -1,4 +1,4 @@
-import { Github, Linkedin } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 import { profile } from "../data/profile.js";
 
 export default function Header() {
@@ -8,17 +8,32 @@ export default function Header() {
         Ray Mahbub
       </a>
       <div className="fade-in flex items-center gap-5" style={{ "--d": "100ms" }}>
+        <span
+          className="hidden items-center gap-3 text-[10px] font-medium uppercase tracking-[0.18em] text-dim sm:flex"
+          aria-hidden="true"
+        >
+          contact
+          <span className="h-px w-6 bg-gradient-to-r from-line to-transparent" />
+        </span>
+        <a
+          href={`mailto:${profile.email}`}
+          aria-label="Email"
+          title={profile.email.toLowerCase()}
+          className="text-faint transition-colors duration-300 hover:text-copper-soft"
+        >
+          <Mail size={17} aria-hidden="true" />
+        </a>
         <a
           href={profile.socials.github}
           aria-label="GitHub"
-          className="text-faint transition-colors duration-300 hover:text-cream"
+          className="text-faint transition-colors duration-300 hover:text-copper-soft"
         >
           <Github size={17} aria-hidden="true" />
         </a>
         <a
           href={profile.socials.linkedin}
           aria-label="LinkedIn"
-          className="text-faint transition-colors duration-300 hover:text-cream"
+          className="text-faint transition-colors duration-300 hover:text-copper-soft"
         >
           <Linkedin size={17} aria-hidden="true" />
         </a>
