@@ -228,7 +228,7 @@ export default function Bento() {
         href="https://ray98872.github.io/homelab/"
         label="Personal infrastructure"
         title="Self-hosted home server"
-        desc="Jellyfin, Immich, Pi-hole and Gluetun in Docker — subscriptions replaced. Read the full stack breakdown."
+        desc="Jellyfin, Immich, Pi-hole and Gluetun in Docker — my media library, photos and DNS, self-hosted. Read the full stack breakdown."
         meta="docker · linux · write-up"
         graphic={<ServerRack />}
         delay={120}
