@@ -47,7 +47,7 @@ export const profile = {
     {
       degree: "MSc Artificial Intelligence (Merit)",
       school: "Royal Holloway, University of London",
-      period: "2023 — 2024",
+      period: "2023 — 2025",
     },
     {
       degree: "BSc Mathematics with Computer Science",
