@@ -168,11 +168,11 @@ export default function Bento() {
       />
       <Card
         span="lg:col-span-2"
-        href="/papers/gpu-accelerated-conformal-prediction.pdf"
-        label="MSc dissertation · 2024"
-        title="GPU-Accelerated Conformal Prediction"
-        desc="Parallelising uncertainty quantification with CUDA and PyTorch — read the full paper."
-        meta="cuda · pytorch · pdf"
+        href="https://ray98872.github.io/chargeback-dispute-agent/"
+        label="MSc dissertation → autonomous agent"
+        title="Conformal prediction, from research to product"
+        desc="My dissertation built GPU-accelerated conformal intervals around car-price predictions; its extension puts the same math in charge — an autonomous dispute agent that refunds only above 95% calibrated confidence. Write-up, live demo and the original paper."
+        meta="pytorch · cuda · conformal prediction · agentic"
         graphic={<ConformalBand />}
         delay={160}
       />
