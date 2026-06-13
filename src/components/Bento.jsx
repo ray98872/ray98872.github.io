@@ -390,7 +390,7 @@ export default function Bento() {
         <div className="mt-3 flex items-center gap-2 rounded-md bg-cream/[0.03] px-3 py-2 hover:bg-cream/[0.06] transition-colors">
           <span className="h-2 w-2 rounded-full bg-copper animate-pulse" />
           <audio controls className="h-5 flex-1 max-w-xs" controlsList="nodownload">
-            <source src="/generated-music.mp3" type="audio/mpeg" />
+            <source src="/someaudioimade.mp3" type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
           <span className="font-mono text-[10px] text-dim whitespace-nowrap">30s sample</span>
