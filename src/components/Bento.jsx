@@ -113,6 +113,52 @@ function ConformalBand() {
   );
 }
 
+function LakehouseFlow() {
+  const stages = [
+    { x: 28, label: "iot" },
+    { x: 108, label: "minio" },
+    { x: 188, label: "spark" },
+    { x: 268, label: "3σ" },
+  ];
+  return (
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(201,126,78,0.12),transparent_65%)]">
+      <svg viewBox="0 0 320 176" className="absolute inset-0 h-full w-full">
+        {/* pipeline chips */}
+        <line x1="52" y1="42" x2="244" y2="42" stroke="rgba(242,240,234,0.14)" strokeWidth="1" />
+        <circle r="2.2" fill="#c97e4e">
+          <animateMotion dur="3.2s" repeatCount="indefinite" path="M52,42 L244,42" />
+        </circle>
+        {stages.map((s) => (
+          <g key={s.label}>
+            <rect x={s.x - 24} y={30} width="48" height="24" rx="7" fill="rgba(242,240,234,0.04)" stroke="rgba(242,240,234,0.14)" />
+            <text x={s.x} y={46} textAnchor="middle" className="font-mono" fontSize="9" fill="#98948a">
+              {s.label}
+            </text>
+          </g>
+        ))}
+        {/* 3σ band */}
+        <path
+          d="M0,108 C50,104 90,112 140,106 C190,100 250,110 320,103 L320,141 C250,148 190,138 140,144 C90,150 50,142 0,146 Z"
+          fill="rgba(201,126,78,0.10)"
+        />
+        {/* sensor trace with one excursion */}
+        <path
+          d="M0,128 L28,124 L52,130 L76,122 L100,127 L124,121 L148,90 L168,126 L196,120 L222,125 L248,118 L274,124 L298,119 L320,123"
+          fill="none"
+          stroke="rgba(155,180,201,0.65)"
+          strokeWidth="1.5"
+        />
+        {/* flagged anomaly */}
+        <circle cx="148" cy="90" r="3" fill="#c97e4e" />
+        <circle cx="148" cy="90" r="6" fill="none" stroke="rgba(201,126,78,0.5)" strokeWidth="1">
+          <animate attributeName="r" values="4;11" dur="1.8s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.8;0" dur="1.8s" repeatCount="indefinite" />
+        </circle>
+      </svg>
+    </div>
+  );
+}
+
 export default function Bento() {
   const [shaderOpen, setShaderOpen] = useState(false);
   return (
@@ -195,7 +241,17 @@ export default function Bento() {
         graphic={<PixelGrid />}
         delay={240}
       />
-      <Card span="lg:col-span-4" label="Stack" delay={280}>
+      <Card
+        span="lg:col-span-2"
+        href="https://ray98872.github.io/iot-lakehouse/"
+        label="Data engineering"
+        title="IoT Anomaly Detection Lakehouse"
+        desc="An AWS + Databricks lakehouse replicated 1:1 in Docker Compose at £0 — MinIO, PySpark and a streaming sensor fleet flagging 3σ faults for predictive maintenance. Write-up, in-browser demo and source."
+        meta="docker · pyspark · minio · write-up"
+        graphic={<LakehouseFlow />}
+        delay={280}
+      />
+      <Card span="lg:col-span-6" label="Stack" delay={320}>
         <ul className="mt-3 flex flex-wrap gap-1.5">
           {profile.skills.map((skill) => (
             <li
