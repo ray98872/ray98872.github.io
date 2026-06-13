@@ -4,4 +4,5 @@ dist
 *.local
 Resources/
 homelab-site/
+local-ai-pipeline-site/
 homelab-showcase-prompt.md

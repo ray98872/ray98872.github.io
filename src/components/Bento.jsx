@@ -35,6 +35,41 @@ function Card({ href, onClick, label, title, desc, meta, graphic, span = "", del
   );
 }
 
+// A card that links to its own page like the others, but still hosts interactive
+// content (an audio player). An <a> can't legally contain an <audio>, so the card
+// is a div with a stretched transparent link; the player is lifted above it so it
+// keeps its own clicks while everything else navigates.
+function LinkedMediaCard({ href, label, title, desc, meta, graphic, span = "", delay = 0, children }) {
+  const external = href.startsWith("http");
+  return (
+    <Reveal delay={delay} className={span}>
+      <div className="bento-card is-linked h-full w-full">
+        <a
+          href={href}
+          {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+          aria-label={title}
+          className="absolute inset-0 z-10"
+        />
+        {graphic && (
+          <div className="card-graphic relative h-40 shrink-0 overflow-hidden sm:h-44" aria-hidden="true">
+            {graphic}
+          </div>
+        )}
+        <div className="flex flex-1 flex-col p-6">
+          <div className="flex items-baseline justify-between gap-4">
+            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-dim">{label}</p>
+            <ArrowUpRight size={15} className="card-arrow shrink-0 text-dim" aria-hidden="true" />
+          </div>
+          {title && <h2 className="mt-2 text-lg font-medium tracking-[-0.01em] text-cream">{title}</h2>}
+          {desc && <p className="mt-1.5 text-[13.5px] leading-relaxed text-faint">{desc}</p>}
+          {children && <div className="relative z-20">{children}</div>}
+          {meta && <p className="mt-auto pt-4 font-mono text-[11px] text-dim">{meta}</p>}
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
 function PinField() {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_60%,rgba(201,126,78,0.12),transparent_65%)]">
@@ -342,11 +377,12 @@ export default function Bento() {
         graphic={<ShaderScene maxDpr={1} className="h-full w-full" />}
         delay={200}
       />
-      <Card
+      <LinkedMediaCard
         span="lg:col-span-2"
+        href="https://ray98872.github.io/local-ai-pipeline/"
         label="Game development"
         title="Local AI asset pipeline"
-        desc="Generative pipelines on AMD RX 9070XT: ComfyUI for SDXL image generation with upscaling, Stable Audio Open composing to MP3, and aisprite — a Python server that integrates Stable Diffusion directly into Aseprite for AI-powered pixel art with LoRA style control."
+        desc="Generative pipelines on an AMD RX 9070XT: ComfyUI for SDXL image generation with upscaling, Stable Audio Open composing to MP3, and aisprite — a Python server that wires Stable Diffusion into Aseprite for LoRA-styled pixel art. Read the full build."
         meta="comfyui · aseprite · directml · pixel-art"
         graphic={<ComfyUIGraph />}
         delay={240}
@@ -359,7 +395,7 @@ export default function Bento() {
           </audio>
           <span className="font-mono text-[10px] text-dim whitespace-nowrap">30s sample</span>
         </div>
-      </Card>
+      </LinkedMediaCard>
       <Card
         span="lg:col-span-2"
         href="https://ray98872.github.io/iot-lakehouse/"

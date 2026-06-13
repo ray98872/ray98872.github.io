@@ -85,6 +85,28 @@ a.bento-card:hover .card-arrow {
   color: var(--color-copper-soft);
 }
 
+/* Card that links out but contains its own interactive content (e.g. an audio
+   player). The container is a div with a stretched <a> overlay, so the hover
+   treatment is keyed off the container rather than an anchor. */
+.bento-card.is-linked:hover,
+.bento-card.is-linked:focus-within {
+  border-color: rgba(201, 126, 78, 0.45);
+  transform: translateY(-4px);
+  box-shadow:
+    0 -24px 80px -28px rgba(201, 126, 78, 0.22) inset,
+    0 24px 60px -36px rgba(0, 0, 0, 0.9);
+}
+
+.bento-card.is-linked:hover .card-graphic {
+  transform: scale(1.04);
+}
+
+.bento-card.is-linked:hover .card-arrow,
+.bento-card.is-linked:focus-within .card-arrow {
+  transform: translate(3px, -3px);
+  color: var(--color-copper-soft);
+}
+
 .line-mask {
   display: block;
   overflow: hidden;
