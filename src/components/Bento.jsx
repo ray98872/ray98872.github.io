@@ -67,6 +67,116 @@ function ServerRack() {
   );
 }
 
+function ComfyUIGraph() {
+  // Node positions and connections for ComfyUI pipeline
+  const nodes = [
+    { id: 1, x: 20, y: 50, label: "Prompt", color: "#98948a" },
+    { id: 2, x: 60, y: 30, label: "SDXL", color: "#c97e4e" },
+    { id: 3, x: 60, y: 70, label: "Upscale", color: "#c97e4e" },
+    { id: 4, x: 100, y: 50, label: "Refine", color: "#c97e4e" },
+    { id: 5, x: 140, y: 50, label: "Output", color: "#f2f0ea" },
+  ];
+
+  const connections = [
+    [1, 2],
+    [1, 3],
+    [2, 4],
+    [3, 4],
+    [4, 5],
+  ];
+
+  return (
+    <svg viewBox="0 0 320 176" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice">
+      {/* Background gradient */}
+      <defs>
+        <radialGradient id="nodeBg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(201,126,78,0.1)" />
+          <stop offset="100%" stopColor="rgba(201,126,78,0.02)" />
+        </radialGradient>
+      </defs>
+      <rect width="320" height="176" fill="url(#nodeBg)" />
+
+      {/* Connections (wires) */}
+      {connections.map(([from, to], i) => {
+        const fromNode = nodes.find((n) => n.id === from);
+        const toNode = nodes.find((n) => n.id === to);
+        return (
+          <g key={`wire-${i}`}>
+            {/* Glow effect */}
+            <line
+              x1={fromNode.x * 2.2}
+              y1={fromNode.y * 1.76}
+              x2={toNode.x * 2.2}
+              y2={toNode.y * 1.76}
+              stroke="rgba(201,126,78,0.2)"
+              strokeWidth="4"
+              strokeLinecap="round"
+              opacity="0.4"
+            />
+            {/* Main wire */}
+            <line
+              x1={fromNode.x * 2.2}
+              y1={fromNode.y * 1.76}
+              x2={toNode.x * 2.2}
+              y2={toNode.y * 1.76}
+              stroke={fromNode.color}
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              opacity="0.7"
+            />
+          </g>
+        );
+      })}
+
+      {/* Nodes */}
+      {nodes.map((node) => (
+        <g key={`node-${node.id}`}>
+          {/* Node glow */}
+          <circle
+            cx={node.x * 2.2}
+            cy={node.y * 1.76}
+            r="7"
+            fill="none"
+            stroke={node.color}
+            strokeWidth="1"
+            opacity="0.3"
+          />
+          {/* Node body */}
+          <rect
+            x={node.x * 2.2 - 6}
+            y={node.y * 1.76 - 6}
+            width="12"
+            height="12"
+            rx="2"
+            fill={node.color}
+            opacity="0.9"
+          />
+          {/* Node label */}
+          <text
+            x={node.x * 2.2}
+            y={node.y * 1.76 + 18}
+            textAnchor="middle"
+            className="font-mono"
+            fontSize="8"
+            fill={node.color}
+            opacity="0.7"
+          >
+            {node.label}
+          </text>
+        </g>
+      ))}
+
+      {/* Animated data flow dot */}
+      <circle r="2" fill="#c97e4e" opacity="0.8">
+        <animateMotion dur="4s" repeatCount="indefinite">
+          <mpath href="#flow-path" />
+        </animateMotion>
+      </circle>
+      <path id="flow-path" d="M44,88 Q120,50 290,88" fill="none" />
+    </svg>
+  );
+}
+
 function PixelGrid() {
   const cells = Array.from({ length: 60 });
   const tone = (i) => {
@@ -236,11 +346,20 @@ export default function Bento() {
         span="lg:col-span-2"
         label="Game development"
         title="Local AI asset pipeline"
-        desc="Generative models on my own hardware producing 3D models and pixel art for game projects."
-        meta="local llms · ongoing"
-        graphic={<PixelGrid />}
+        desc="Generative pipelines on AMD RX 9070XT: ComfyUI for SDXL image generation with upscaling, Stable Audio Open composing to MP3, and aisprite — a Python server that integrates Stable Diffusion directly into Aseprite for AI-powered pixel art with LoRA style control."
+        meta="comfyui · aseprite · directml · pixel-art"
+        graphic={<ComfyUIGraph />}
         delay={240}
-      />
+      >
+        <div className="mt-3 flex items-center gap-2 rounded-md bg-cream/[0.03] px-3 py-2 hover:bg-cream/[0.06] transition-colors">
+          <span className="h-2 w-2 rounded-full bg-copper animate-pulse" />
+          <audio controls className="h-5 flex-1 max-w-xs" controlsList="nodownload">
+            <source src="/generated-music.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+          <span className="font-mono text-[10px] text-dim whitespace-nowrap">30s sample</span>
+        </div>
+      </Card>
       <Card
         span="lg:col-span-2"
         href="https://ray98872.github.io/iot-lakehouse/"
