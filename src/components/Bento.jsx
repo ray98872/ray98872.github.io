@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ArrowUpRight, MapPin, Briefcase, GraduationCap } from "lucide-react";
+import { useState, useRef } from "react";
+import { ArrowUpRight, MapPin, Briefcase, GraduationCap, Play, Pause } from "lucide-react";
 import { profile } from "../data/profile.js";
 import Reveal from "./Reveal.jsx";
 import ShaderScene from "./ShaderScene.jsx";
@@ -70,6 +70,78 @@ function LinkedMediaCard({ href, label, title, desc, meta, graphic, span = "", d
   );
 }
 
+// Themed audio player — replaces the default browser control so it matches the
+// dark/copper palette. Sits above the card's stretched link and swallows its own
+// clicks so play/seek never trigger navigation.
+function GpuAudioPlayer({ src, caption }) {
+  const audioRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+  const [time, setTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const fmt = (s) =>
+    !s || !isFinite(s) ? "0:00" : `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+
+  const swallow = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  const toggle = (e) => {
+    swallow(e);
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) a.play();
+    else a.pause();
+  };
+
+  const seek = (e) => {
+    swallow(e);
+    const a = audioRef.current;
+    if (!a || !a.duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    a.currentTime = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width)) * a.duration;
+  };
+
+  const pct = duration ? (time / duration) * 100 : 0;
+
+  return (
+    <div className="mt-3 rounded-lg border border-line bg-bg/40 px-3 py-2.5" onClick={swallow}>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={toggle}
+          aria-label={playing ? "Pause" : "Play"}
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-copper text-bg shadow-[0_0_12px_rgba(201,126,78,0.45)] transition-transform hover:scale-105"
+        >
+          {playing ? <Pause size={13} fill="currentColor" /> : <Play size={13} fill="currentColor" className="ml-0.5" />}
+        </button>
+        <div className="relative h-1.5 flex-1 cursor-pointer rounded-full bg-cream/10" onClick={seek}>
+          <div className="absolute inset-y-0 left-0 rounded-full bg-copper" style={{ width: `${pct}%` }} />
+        </div>
+        <span className="font-mono text-[10px] tabular-nums text-dim whitespace-nowrap">
+          {fmt(time)} / {fmt(duration)}
+        </span>
+      </div>
+      {caption && <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-dim">{caption}</p>}
+      <audio
+        ref={audioRef}
+        src={src}
+        preload="metadata"
+        className="hidden"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+        onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
+        onEnded={() => {
+          setPlaying(false);
+          setTime(0);
+        }}
+      />
+    </div>
+  );
+}
+
 function PinField() {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_60%,rgba(201,126,78,0.12),transparent_65%)]">
@@ -103,111 +175,70 @@ function ServerRack() {
 }
 
 function ComfyUIGraph() {
-  // Node positions and connections for ComfyUI pipeline
+  // Node centres in the 320x176 viewBox. The flow pulses below animate along the
+  // exact same coordinates, so they always track the wires.
   const nodes = [
-    { id: 1, x: 20, y: 50, label: "Prompt", color: "#98948a" },
-    { id: 2, x: 60, y: 30, label: "SDXL", color: "#c97e4e" },
-    { id: 3, x: 60, y: 70, label: "Upscale", color: "#c97e4e" },
-    { id: 4, x: 100, y: 50, label: "Refine", color: "#c97e4e" },
-    { id: 5, x: 140, y: 50, label: "Output", color: "#f2f0ea" },
+    { id: "prompt", x: 40, y: 88, label: "Prompt", color: "#98948a" },
+    { id: "sdxl", x: 120, y: 56, label: "SDXL", color: "#c97e4e" },
+    { id: "upscale", x: 120, y: 120, label: "Upscale", color: "#c97e4e" },
+    { id: "refine", x: 200, y: 88, label: "Refine", color: "#c97e4e" },
+    { id: "output", x: 280, y: 88, label: "Output", color: "#f2f0ea" },
   ];
-
-  const connections = [
-    [1, 2],
-    [1, 3],
-    [2, 4],
-    [3, 4],
-    [4, 5],
+  const at = (id) => nodes.find((n) => n.id === id);
+  const wires = [
+    ["prompt", "sdxl"],
+    ["prompt", "upscale"],
+    ["sdxl", "refine"],
+    ["upscale", "refine"],
+    ["refine", "output"],
   ];
+  // Two pulses travel the full pipeline, one through each branch, offset in time.
+  const topPath = "M40,88 L120,56 L200,88 L280,88";
+  const bottomPath = "M40,88 L120,120 L200,88 L280,88";
+  const fade = { values: "0;1;1;1;0", keyTimes: "0;0.07;0.5;0.9;1", dur: "3.4s", repeatCount: "indefinite" };
 
   return (
     <svg viewBox="0 0 320 176" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice">
-      {/* Background gradient */}
       <defs>
         <radialGradient id="nodeBg" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="rgba(201,126,78,0.1)" />
+          <stop offset="0%" stopColor="rgba(201,126,78,0.12)" />
           <stop offset="100%" stopColor="rgba(201,126,78,0.02)" />
         </radialGradient>
       </defs>
       <rect width="320" height="176" fill="url(#nodeBg)" />
 
-      {/* Connections (wires) */}
-      {connections.map(([from, to], i) => {
-        const fromNode = nodes.find((n) => n.id === from);
-        const toNode = nodes.find((n) => n.id === to);
+      {/* Wires (copper, with a soft underglow) */}
+      {wires.map(([from, to], i) => {
+        const a = at(from);
+        const b = at(to);
         return (
           <g key={`wire-${i}`}>
-            {/* Glow effect */}
-            <line
-              x1={fromNode.x * 2.2}
-              y1={fromNode.y * 1.76}
-              x2={toNode.x * 2.2}
-              y2={toNode.y * 1.76}
-              stroke="rgba(201,126,78,0.2)"
-              strokeWidth="4"
-              strokeLinecap="round"
-              opacity="0.4"
-            />
-            {/* Main wire */}
-            <line
-              x1={fromNode.x * 2.2}
-              y1={fromNode.y * 1.76}
-              x2={toNode.x * 2.2}
-              y2={toNode.y * 1.76}
-              stroke={fromNode.color}
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              opacity="0.7"
-            />
+            <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="rgba(201,126,78,0.22)" strokeWidth="3.5" strokeLinecap="round" />
+            <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#c97e4e" strokeWidth="1.2" strokeLinecap="round" opacity="0.85" />
           </g>
         );
       })}
 
+      {/* Flow pulses — follow the wires exactly */}
+      <circle r="2.6" fill="#e0a075">
+        <animateMotion dur="3.4s" repeatCount="indefinite" path={topPath} />
+        <animate attributeName="opacity" values={fade.values} keyTimes={fade.keyTimes} dur={fade.dur} repeatCount="indefinite" />
+      </circle>
+      <circle r="2.6" fill="#e0a075">
+        <animateMotion dur="3.4s" begin="-1.7s" repeatCount="indefinite" path={bottomPath} />
+        <animate attributeName="opacity" values={fade.values} keyTimes={fade.keyTimes} dur={fade.dur} begin="-1.7s" repeatCount="indefinite" />
+      </circle>
+
       {/* Nodes */}
-      {nodes.map((node) => (
-        <g key={`node-${node.id}`}>
-          {/* Node glow */}
-          <circle
-            cx={node.x * 2.2}
-            cy={node.y * 1.76}
-            r="7"
-            fill="none"
-            stroke={node.color}
-            strokeWidth="1"
-            opacity="0.3"
-          />
-          {/* Node body */}
-          <rect
-            x={node.x * 2.2 - 6}
-            y={node.y * 1.76 - 6}
-            width="12"
-            height="12"
-            rx="2"
-            fill={node.color}
-            opacity="0.9"
-          />
-          {/* Node label */}
-          <text
-            x={node.x * 2.2}
-            y={node.y * 1.76 + 18}
-            textAnchor="middle"
-            className="font-mono"
-            fontSize="8"
-            fill={node.color}
-            opacity="0.7"
-          >
-            {node.label}
+      {nodes.map((n) => (
+        <g key={n.id}>
+          <circle cx={n.x} cy={n.y} r="9" fill="none" stroke={n.color} strokeWidth="1" opacity="0.25" />
+          <rect x={n.x - 6} y={n.y - 6} width="12" height="12" rx="3" fill={n.color} opacity="0.95" />
+          <text x={n.x} y={n.y + 17} textAnchor="middle" className="font-mono" fontSize="8" fill={n.color} opacity="0.75">
+            {n.label}
           </text>
         </g>
       ))}
-
-      {/* Animated data flow dot */}
-      <circle r="2" fill="#c97e4e" opacity="0.8">
-        <animateMotion dur="4s" repeatCount="indefinite">
-          <mpath href="#flow-path" />
-        </animateMotion>
-      </circle>
-      <path id="flow-path" d="M44,88 Q120,50 290,88" fill="none" />
     </svg>
   );
 }
@@ -382,19 +413,12 @@ export default function Bento() {
         href="https://ray98872.github.io/local-ai-pipeline/"
         label="Game development"
         title="Local AI asset pipeline"
-        desc="Generative pipelines on an AMD RX 9070XT: ComfyUI for SDXL image generation with upscaling, Stable Audio Open composing to MP3, and aisprite — a Python server that wires Stable Diffusion into Aseprite for LoRA-styled pixel art. Read the full build."
+        desc="Generative game-asset tooling on an AMD RX 9070 XT: ComfyUI + SDXL images with upscaling, Stable Audio Open music, and aisprite — Stable Diffusion wired into Aseprite for LoRA-styled pixel art. Read the full build."
         meta="comfyui · aseprite · directml · pixel-art"
         graphic={<ComfyUIGraph />}
         delay={240}
       >
-        <div className="mt-3 flex items-center gap-2 rounded-md bg-cream/[0.03] px-3 py-2 hover:bg-cream/[0.06] transition-colors">
-          <span className="h-2 w-2 rounded-full bg-copper animate-pulse" />
-          <audio controls className="h-5 flex-1 max-w-xs" controlsList="nodownload">
-            <source src="/someaudioimade.mp3" type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
-          <span className="font-mono text-[10px] text-dim whitespace-nowrap">30s sample</span>
-        </div>
+        <GpuAudioPlayer src="/someaudioimade.mp3" caption="composed after Dark Souls III · Metroid Fusion" />
       </LinkedMediaCard>
       <Card
         span="lg:col-span-2"
