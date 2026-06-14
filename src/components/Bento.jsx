@@ -339,6 +339,72 @@ function ConformalBand() {
   );
 }
 
+function RAGFlow() {
+  const stages = [
+    { x: 44, label: "SRD" },
+    { x: 118, label: "chunk" },
+    { x: 192, label: "embed" },
+    { x: 266, label: "rank" },
+  ];
+  // Score bar widths: faithfulness 79%, relevancy 69%, recall 60%
+  const scores = [
+    { label: "faith", pct: 79, y: 148 },
+    { label: "relev", pct: 69, y: 159 },
+    { label: "recall", pct: 60, y: 170 },
+  ];
+  return (
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(201,126,78,0.11),transparent_65%)]">
+      <svg viewBox="0 0 320 176" className="absolute inset-0 h-full w-full">
+        {/* pipeline rail */}
+        <line x1="44" y1="44" x2="266" y2="44" stroke="rgba(242,240,234,0.10)" strokeWidth="1" />
+        {/* stage chips */}
+        {stages.map((s) => (
+          <g key={s.label}>
+            <rect x={s.x - 26} y={32} width="52" height="24" rx="7"
+              fill="rgba(242,240,234,0.04)" stroke="rgba(242,240,234,0.14)" />
+            <text x={s.x} y={48} textAnchor="middle" fontSize="9" fill="#98948a" fontFamily="monospace">
+              {s.label}
+            </text>
+          </g>
+        ))}
+        {/* animated particle along pipeline */}
+        <circle r="2.2" fill="#c97e4e">
+          <animateMotion dur="2.6s" repeatCount="indefinite" path="M44,44 L266,44" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.06;0.88;1" dur="2.6s" repeatCount="indefinite" />
+        </circle>
+        {/* vector dot cluster */}
+        {Array.from({ length: 30 }).map((_, i) => {
+          const col = i % 10;
+          const row = Math.floor(i / 10);
+          const x = 28 + col * 27;
+          const y = 82 + row * 22;
+          const v = (i * 2654435761) % 100;
+          const bright = v > 82;
+          const mid = v > 60;
+          return (
+            <circle key={i} cx={x} cy={y} r={bright ? 3 : mid ? 2 : 1.4}
+              fill={bright ? "rgba(201,126,78,0.75)" : mid ? "rgba(201,126,78,0.25)" : "rgba(242,240,234,0.09)"} />
+          );
+        })}
+        {/* D20 */}
+        <polygon points="291,72 279,94 303,94"
+          fill="none" stroke="rgba(201,126,78,0.55)" strokeWidth="1.2" />
+        <text x="291" y="89" textAnchor="middle" fontSize="8" fill="rgba(201,126,78,0.55)" fontFamily="monospace">20</text>
+        {/* RAGAS mini-bars */}
+        {scores.map((s) => (
+          <g key={s.label}>
+            <text x="28" y={s.y - 1} fontSize="7.5" fill="rgba(242,240,234,0.2)" fontFamily="monospace">{s.label}</text>
+            <rect x="72" y={s.y - 6} width="80" height="3.5" rx="1.75" fill="rgba(242,240,234,0.06)" />
+            <rect x="72" y={s.y - 6} width={80 * s.pct / 100} height="3.5" rx="1.75" fill="rgba(201,126,78,0.55)" />
+            <text x="158" y={s.y - 1} fontSize="7.5" fill="rgba(201,126,78,0.6)" fontFamily="monospace">{(s.pct / 100).toFixed(2)}</text>
+          </g>
+        ))}
+        <text x="28" y="140" fontSize="7" fill="rgba(242,240,234,0.15)" fontFamily="monospace" letterSpacing="0.12em">RAGAS EVAL</text>
+      </svg>
+    </div>
+  );
+}
+
 function LakehouseFlow() {
   const stages = [
     { x: 28, label: "iot" },
@@ -489,6 +555,16 @@ export default function Bento() {
         meta="custom firmware · homebrew · since 2011"
         graphic={<CircuitBoard />}
         delay={320}
+      />
+      <Card
+        span="lg:col-span-4"
+        href="https://ray98872.github.io/dnd-rag/writeup.html"
+        label="RAG · eval · LLM"
+        title="D&D 5e Rules Oracle"
+        desc="Production RAG system over the 2024 D&D SRD — hybrid dense + sparse retrieval, cross-encoder reranking, RAGAS evaluation and a streaming dark-fantasy chat frontend hosted on GitHub Pages."
+        meta="qdrant · llama 3.3 70b · ragas · railway"
+        graphic={<RAGFlow />}
+        delay={340}
       />
       <Card span="lg:col-span-6" label="Stack" delay={360}>
         <ul className="mt-3 flex flex-wrap gap-1.5">
