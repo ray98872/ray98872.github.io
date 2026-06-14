@@ -12,21 +12,22 @@ export default function Hero() {
       </p>
       <h1 className="max-w-3xl text-[clamp(2.2rem,6vw,4.2rem)] font-semibold leading-[1.04] tracking-[-0.02em] text-cream">
         <span className="line-mask">
-          <span style={{ "--d": "250ms" }}>Building production</span>
+          <span style={{ "--d": "250ms" }}>LLMs that reason,</span>
         </span>
         <span className="line-mask">
           <span style={{ "--d": "380ms" }}>
-            <span className="font-display font-light italic text-copper">agentic AI</span> — and the
+            <span className="font-display font-light italic text-copper">agents that act</span> —
           </span>
         </span>
         <span className="line-mask">
-          <span style={{ "--d": "510ms" }}>infrastructure it runs on.</span>
+          <span style={{ "--d": "510ms" }}>systems that ship.</span>
         </span>
       </h1>
       <p className="fade-in mt-6 max-w-xl text-base leading-relaxed text-faint" style={{ "--d": "750ms" }}>
-        I'm <span className="text-cream">Ray Mahbub</span> — AI developer at ICS.AI, working in
-        C#/.NET and Azure. Below: a web platform live in production, a self-hosted homelab, two
-        dissertations, and a raymarcher running on your GPU.
+        AI developer at <span className="text-cream">ICS.AI</span> — building agentic and LLM
+        systems in C#/.NET and Azure that run in production. MSc in Artificial Intelligence (Royal
+        Holloway), BSc in Mathematics with Computer Science (Brunel). Promoted from Associate within
+        twelve months.
       </p>
     </section>
   );

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { ArrowUpRight, MapPin, Briefcase, GraduationCap, Play, Pause } from "lucide-react";
+import { ArrowUpRight, MapPin, Play, Pause } from "lucide-react";
 import { profile } from "../data/profile.js";
 import Reveal from "./Reveal.jsx";
 import ShaderScene from "./ShaderScene.jsx";
@@ -405,6 +405,22 @@ function RAGFlow() {
   );
 }
 
+// ── Section header ─────────────────────────────────────────────────────────────
+function BentoSection({ num, title, children }) {
+  return (
+    <div>
+      <Reveal>
+        <div className="mb-5 flex items-baseline gap-3.5">
+          <span className="font-display text-sm italic leading-none text-copper">{num}</span>
+          <h2 className="text-[11px] font-medium uppercase tracking-[0.22em] text-faint">{title}</h2>
+          <span className="h-px flex-1 bg-gradient-to-r from-line to-transparent" />
+        </div>
+      </Reveal>
+      {children}
+    </div>
+  );
+}
+
 function LakehouseFlow() {
   const stages = [
     { x: 28, label: "iot" },
@@ -454,131 +470,131 @@ function LakehouseFlow() {
 export default function Bento() {
   const [shaderOpen, setShaderOpen] = useState(false);
   return (
-    <section id="work" className="grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-6">
-      <Card
-        span="lg:col-span-4"
-        href="https://thehalalpin.co.uk"
-        label="Live in production"
-        title="The Halal Pin"
-        desc="Community-driven halal food finder. Sole developer across the full stack — product design, build, hosting, domain and deployment at thehalalpin.co.uk."
-        meta="web platform · sole developer"
-        graphic={<PinField />}
-        delay={0}
-      />
-      <Card span="lg:col-span-2" label="About" delay={80}>
-        <div className="mt-2 space-y-3 text-[13.5px] leading-relaxed text-faint">
-          <p>
-            AI developer shipping production agentic systems at ICS.AI — promoted from AI Associate
-            within 12 months.
-          </p>
-          <p className="flex items-start gap-2 text-[12.5px]">
-            <Briefcase size={13} className="mt-0.5 shrink-0 text-copper" aria-hidden="true" />
-            <span>
-              {profile.experience[0].role} · {profile.experience[0].company}
-              <span className="block font-mono text-[10px] text-dim">{profile.experience[0].period}</span>
-            </span>
-          </p>
-          <p className="flex items-start gap-2 text-[12.5px]">
-            <GraduationCap size={13} className="mt-0.5 shrink-0 text-copper" aria-hidden="true" />
-            <span>
-              MSc Artificial Intelligence
-              <span className="block font-mono text-[10px] text-dim">Royal Holloway, University of London</span>
-            </span>
-          </p>
-          <p className="flex items-start gap-2 text-[12.5px]">
-            <GraduationCap size={13} className="mt-0.5 shrink-0 text-copper" aria-hidden="true" />
-            <span>
-              BSc Mathematics with Computer Science
-              <span className="block font-mono text-[10px] text-dim">Brunel University London</span>
-            </span>
-          </p>
+    <section id="work" className="space-y-16 pb-20">
+
+      {/* ── 01 Shipped ───────────────────────────────────────────────────────── */}
+      <BentoSection num="01" title="Shipped">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
+          <Card
+            span="lg:col-span-6"
+            href="https://thehalalpin.co.uk"
+            label="Live in production"
+            title="The Halal Pin"
+            desc="Community-driven halal food finder. Sole developer across the full stack — product design, build, hosting, domain and deployment at thehalalpin.co.uk."
+            meta="web platform · sole developer"
+            graphic={<PinField />}
+            delay={0}
+          />
         </div>
-      </Card>
-      <Card
-        span="lg:col-span-2"
-        href="https://ray98872.github.io/homelab/"
-        label="Personal infrastructure"
-        title="Self-hosted home server"
-        desc="Jellyfin, Pi-hole and Gluetun in Docker — my media library and DNS, self-hosted. Read the full stack breakdown."
-        meta="docker · linux · write-up"
-        graphic={<ServerRack />}
-        delay={120}
-      />
-      <Card
-        span="lg:col-span-2"
-        href="https://ray98872.github.io/chargeback-dispute-agent/"
-        label="MSc dissertation → autonomous agent"
-        title="Conformal prediction, from research to product"
-        desc="My dissertation built GPU-accelerated conformal intervals around car-price predictions; its extension puts the same math in charge — an autonomous dispute agent that refunds only above 95% calibrated confidence. Write-up, live demo and the original paper."
-        meta="pytorch · cuda · conformal prediction · agentic"
-        graphic={<ConformalBand />}
-        delay={160}
-      />
-      <Card
-        span="lg:col-span-2"
-        onClick={() => setShaderOpen(true)}
-        label="BSc dissertation · 2022 · live"
-        title="Introduction to Sphere Tracing"
-        desc="The dissertation's GLSL raymarcher, running live on your GPU. Click to open and drag to orbit."
-        meta="glsl · webgl · interactive"
-        graphic={<ShaderScene maxDpr={1} className="h-full w-full" />}
-        delay={200}
-      />
-      <LinkedMediaCard
-        span="lg:col-span-2"
-        href="https://ray98872.github.io/local-ai-pipeline/"
-        label="Game development"
-        title="Local AI asset pipeline"
-        desc="Generative game-asset tooling on an AMD RX 9070 XT: ComfyUI + SDXL images with upscaling, Stable Audio Open music, and aisprite — Stable Diffusion wired into Aseprite for LoRA-styled pixel art. Read the full build."
-        meta="comfyui · aseprite · directml · pixel-art"
-        graphic={<ComfyUIGraph />}
-        delay={240}
-      >
-        <GpuAudioPlayer src="/someaudioimade.mp3" caption="composed after Dark Souls III · Metroid Fusion" />
-      </LinkedMediaCard>
-      <Card
-        span="lg:col-span-2"
-        href="https://ray98872.github.io/iot-lakehouse/"
-        label="Data engineering"
-        title="IoT Anomaly Detection Lakehouse"
-        desc="An AWS + Databricks lakehouse replicated 1:1 in Docker Compose at £0 — MinIO, PySpark and a streaming sensor fleet flagging 3σ faults for predictive maintenance. Write-up, in-browser demo and source."
-        meta="docker · pyspark · minio · write-up"
-        graphic={<LakehouseFlow />}
-        delay={280}
-      />
-      <Card
-        span="lg:col-span-2"
-        href="https://ray98872.github.io/device-modding/"
-        label="Hardware hobby"
-        title="Device Modding & Tinkering"
-        desc="Soft-mods, jailbreaks and homebrew across mobile, PlayStation, Nintendo and Xbox — since 2011 and XDA Developers."
-        meta="custom firmware · homebrew · since 2011"
-        graphic={<CircuitBoard />}
-        delay={320}
-      />
-      <Card
-        span="lg:col-span-4"
-        href="https://ray98872.github.io/dnd-rag/writeup.html"
-        label="RAG · eval · LLM"
-        title="D&D 5e Rules Oracle"
-        desc="Production RAG system over the 2024 D&D SRD — hybrid dense + sparse retrieval, cross-encoder reranking, RAGAS evaluation and a streaming dark-fantasy chat frontend hosted on GitHub Pages."
-        meta="qdrant · llama 3.3 70b · ragas · railway"
-        graphic={<RAGFlow />}
-        delay={340}
-      />
-      <Card span="lg:col-span-6" label="Stack" delay={360}>
-        <ul className="mt-3 flex flex-wrap gap-1.5">
-          {profile.skills.map((skill) => (
-            <li
-              key={skill}
-              className="rounded-md border border-line bg-cream/[0.03] px-2.5 py-1 font-mono text-[11px] text-faint transition-colors duration-300 hover:border-copper/40 hover:text-copper-soft"
-            >
-              {skill}
-            </li>
-          ))}
-        </ul>
-        <p className="mt-auto pt-4 font-mono text-[11px] text-dim">daily drivers, not logos</p>
-      </Card>
+      </BentoSection>
+
+      {/* ── 02 Engineered ────────────────────────────────────────────────────── */}
+      <BentoSection num="02" title="Engineered">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
+          <Card
+            span="lg:col-span-4"
+            href="https://ray98872.github.io/dnd-rag/writeup.html"
+            label="RAG · eval · LLM"
+            title="D&D 5e Rules Oracle"
+            desc="Production RAG system over the 2024 D&D SRD — hybrid dense + sparse retrieval, cross-encoder reranking, RAGAS evaluation and a streaming dark-fantasy chat frontend hosted on GitHub Pages."
+            meta="qdrant · llama 3.3 70b · ragas · railway"
+            graphic={<RAGFlow />}
+            delay={0}
+          />
+          <Card
+            span="lg:col-span-2"
+            href="https://ray98872.github.io/iot-lakehouse/"
+            label="Data engineering"
+            title="IoT Anomaly Detection Lakehouse"
+            desc="An AWS + Databricks lakehouse replicated 1:1 in Docker Compose at £0 — MinIO, PySpark and a streaming sensor fleet flagging 3σ faults for predictive maintenance."
+            meta="docker · pyspark · minio · write-up"
+            graphic={<LakehouseFlow />}
+            delay={80}
+          />
+        </div>
+      </BentoSection>
+
+      {/* ── 03 Research ──────────────────────────────────────────────────────── */}
+      <BentoSection num="03" title="Research">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
+          <Card
+            span="lg:col-span-3"
+            href="https://ray98872.github.io/chargeback-dispute-agent/"
+            label="MSc dissertation → autonomous agent"
+            title="Conformal prediction, from research to product"
+            desc="My dissertation built GPU-accelerated conformal intervals around car-price predictions; its extension puts the same math in charge — an autonomous dispute agent that refunds only above 95% calibrated confidence."
+            meta="pytorch · cuda · conformal prediction · agentic"
+            graphic={<ConformalBand />}
+            delay={0}
+          />
+          <Card
+            span="lg:col-span-3"
+            onClick={() => setShaderOpen(true)}
+            label="BSc dissertation · 2022 · live"
+            title="Introduction to Sphere Tracing"
+            desc="The dissertation's GLSL raymarcher, running live on your GPU. Click to open and drag to orbit."
+            meta="glsl · webgl · interactive"
+            graphic={<ShaderScene maxDpr={1} className="h-full w-full" />}
+            delay={80}
+          />
+        </div>
+      </BentoSection>
+
+      {/* ── 04 For fun ───────────────────────────────────────────────────────── */}
+      <BentoSection num="04" title="For fun">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
+          <LinkedMediaCard
+            span="lg:col-span-2"
+            href="https://ray98872.github.io/local-ai-pipeline/"
+            label="Game development"
+            title="Local AI asset pipeline"
+            desc="Generative game-asset tooling on an AMD RX 9070 XT: ComfyUI + SDXL images, Stable Audio Open music, and aisprite — Stable Diffusion wired into Aseprite for LoRA-styled pixel art."
+            meta="comfyui · aseprite · directml · pixel-art"
+            graphic={<ComfyUIGraph />}
+            delay={0}
+          >
+            <GpuAudioPlayer src="/someaudioimade.mp3" caption="composed after Dark Souls III · Metroid Fusion" />
+          </LinkedMediaCard>
+          <Card
+            span="lg:col-span-2"
+            href="https://ray98872.github.io/homelab/"
+            label="Personal infrastructure"
+            title="Self-hosted home server"
+            desc="Jellyfin, Pi-hole and Gluetun in Docker — my media library and DNS, self-hosted. Read the full stack breakdown."
+            meta="docker · linux · write-up"
+            graphic={<ServerRack />}
+            delay={80}
+          />
+          <Card
+            span="lg:col-span-2"
+            href="https://ray98872.github.io/device-modding/"
+            label="Hardware hobby"
+            title="Device Modding & Tinkering"
+            desc="Soft-mods, jailbreaks and homebrew across mobile, PlayStation, Nintendo and Xbox — since 2011 and XDA Developers."
+            meta="custom firmware · homebrew · since 2011"
+            graphic={<CircuitBoard />}
+            delay={160}
+          />
+        </div>
+      </BentoSection>
+
+      {/* ── Stack ────────────────────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-6">
+        <Card span="lg:col-span-6" label="Stack" delay={0}>
+          <ul className="mt-3 flex flex-wrap gap-1.5">
+            {profile.skills.map((skill) => (
+              <li
+                key={skill}
+                className="rounded-md border border-line bg-cream/[0.03] px-2.5 py-1 font-mono text-[11px] text-faint transition-colors duration-300 hover:border-copper/40 hover:text-copper-soft"
+              >
+                {skill}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-auto pt-4 font-mono text-[11px] text-dim">daily drivers, not logos</p>
+        </Card>
+      </div>
+
       <ShaderOverlay open={shaderOpen} onClose={() => setShaderOpen(false)} />
     </section>
   );
