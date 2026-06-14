@@ -7,6 +7,17 @@ export default function Header() {
       <a href="/" className="fade-in font-display text-lg italic text-cream" aria-label="Home">
         Ray Mahbub
       </a>
+      <nav className="hidden items-center gap-5 text-[10px] font-medium uppercase tracking-[0.18em] text-dim lg:flex">
+        {["Shipped", "Engineered", "Research", "For fun"].map((label) => (
+          <a
+            key={label}
+            href={`#${label.toLowerCase().replace(" ", "-")}`}
+            className="transition-colors duration-300 hover:text-cream"
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
       <div className="fade-in flex items-center gap-5" style={{ "--d": "100ms" }}>
         <span
           className="hidden items-center gap-3 text-[10px] font-medium uppercase tracking-[0.18em] text-dim sm:flex"

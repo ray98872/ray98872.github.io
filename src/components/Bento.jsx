@@ -405,10 +405,53 @@ function RAGFlow() {
   );
 }
 
-// ── Section header ─────────────────────────────────────────────────────────────
-function BentoSection({ num, title, children }) {
+function BlueGreenFlow() {
   return (
-    <div>
+    <svg viewBox="0 0 320 176" className="absolute inset-0 h-full w-full">
+      {/* routes */}
+      <path d="M 48 88 C 90 88, 100 88, 138 88" fill="none" stroke="rgba(242,240,234,0.12)" strokeWidth="1.4" />
+      <path d="M 182 80 C 215 62, 230 56, 262 52" fill="none" stroke="rgba(91,157,217,0.35)" strokeWidth="1.4" />
+      <path d="M 182 96 C 215 114, 230 120, 262 124" fill="none" stroke="rgba(93,191,138,0.35)" strokeWidth="1.4" />
+      {/* client */}
+      <rect x="22" y="74" width="26" height="28" rx="7" fill="rgba(242,240,234,0.04)" stroke="rgba(242,240,234,0.14)" />
+      <circle cx="35" cy="84" r="3.5" fill="none" stroke="#98948a" strokeWidth="1.2" />
+      <path d="M 29 96 C 29 91, 41 91, 41 96" fill="none" stroke="#98948a" strokeWidth="1.2" />
+      {/* router */}
+      <rect x="138" y="70" width="44" height="36" rx="8" fill="rgba(201,126,78,0.08)" stroke="rgba(201,126,78,0.4)" />
+      <text x="160" y="92" textAnchor="middle" fontSize="10" fill="#c97e4e" fontFamily="JetBrains Mono, monospace">
+        {"⇄"}
+      </text>
+      {/* blue slot */}
+      <rect x="262" y="38" width="40" height="26" rx="6" fill="rgba(91,157,217,0.08)" stroke="rgba(91,157,217,0.45)" />
+      <text x="282" y="55" textAnchor="middle" fontSize="8.5" fill="#5b9dd9" fontFamily="JetBrains Mono, monospace">
+        v1
+      </text>
+      {/* green slot */}
+      <rect x="262" y="110" width="40" height="26" rx="6" fill="rgba(93,191,138,0.08)" stroke="rgba(93,191,138,0.45)" />
+      <text x="282" y="127" textAnchor="middle" fontSize="8.5" fill="#5dbf8a" fontFamily="JetBrains Mono, monospace">
+        v2
+      </text>
+      {/* travelling requests */}
+      <circle r="2.4" fill="#5b9dd9" opacity="0.9">
+        <animateMotion dur="2.4s" repeatCount="indefinite" path="M 48 88 C 90 88, 100 88, 138 88" />
+      </circle>
+      <circle r="2.4" fill="#5b9dd9" opacity="0.9">
+        <animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M 182 80 C 215 62, 230 56, 262 52" />
+      </circle>
+      <circle r="2.4" fill="#5dbf8a" opacity="0.9">
+        <animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite" path="M 48 88 C 90 88, 100 88, 138 88" />
+      </circle>
+      <circle r="2.4" fill="#5dbf8a" opacity="0.9">
+        <animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite" path="M 182 96 C 215 114, 230 120, 262 124" />
+      </circle>
+    </svg>
+  );
+}
+
+// ── Section header ─────────────────────────────────────────────────────────────
+function BentoSection({ num, title, id, children }) {
+  return (
+    <div id={id}>
       <Reveal>
         <div className="mb-5 flex items-baseline gap-3.5">
           <span className="font-display text-sm italic leading-none text-copper">{num}</span>
@@ -473,7 +516,7 @@ export default function Bento() {
     <section id="work" className="space-y-16 pb-20">
 
       {/* ── 01 Shipped ───────────────────────────────────────────────────────── */}
-      <BentoSection num="01" title="Shipped">
+      <BentoSection num="01" title="Shipped" id="shipped">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
           <Card
             span="lg:col-span-6"
@@ -489,7 +532,7 @@ export default function Bento() {
       </BentoSection>
 
       {/* ── 02 Engineered ────────────────────────────────────────────────────── */}
-      <BentoSection num="02" title="Engineered">
+      <BentoSection num="02" title="Engineered" id="engineered">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
           <Card
             span="lg:col-span-4"
@@ -503,26 +546,36 @@ export default function Bento() {
           />
           <Card
             span="lg:col-span-2"
+            href="https://ray98872.github.io/zerodowntime/"
+            label="Cloud engineering"
+            title="Zero-downtime blue-green deploys"
+            desc="Updating a live GenAI Copilot's RAG index on Azure Container Apps without dropping traffic — C# API, GitHub Actions pipeline, interactive demo."
+            meta="c# · azure · ci/cd · live demo"
+            graphic={<BlueGreenFlow />}
+            delay={80}
+          />
+          <Card
+            span="lg:col-span-6"
             href="https://ray98872.github.io/iot-lakehouse/"
             label="Data engineering"
             title="IoT Anomaly Detection Lakehouse"
             desc="An AWS + Databricks lakehouse replicated 1:1 in Docker Compose at £0 — MinIO, PySpark and a streaming sensor fleet flagging 3σ faults for predictive maintenance."
             meta="docker · pyspark · minio · write-up"
             graphic={<LakehouseFlow />}
-            delay={80}
+            delay={160}
           />
         </div>
       </BentoSection>
 
       {/* ── 03 Research ──────────────────────────────────────────────────────── */}
-      <BentoSection num="03" title="Research">
+      <BentoSection num="03" title="Research" id="research">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
           <Card
             span="lg:col-span-3"
             href="https://ray98872.github.io/chargeback-dispute-agent/"
             label="MSc dissertation → autonomous agent"
             title="Conformal prediction, from research to product"
-            desc="My dissertation built GPU-accelerated conformal intervals around car-price predictions; its extension puts the same math in charge — an autonomous dispute agent that refunds only above 95% calibrated confidence."
+            desc="MSc dissertation: GPU-accelerated conformal prediction intervals around car-price predictions in PyTorch + CUDA — manufacturing rigorous uncertainty bounds, not just point estimates. The follow-up wires the same calibrated-confidence math into an autonomous chargeback dispute agent that refunds only above 95% certainty. Write-up, live demo and the original dissertation paper."
             meta="pytorch · cuda · conformal prediction · agentic"
             graphic={<ConformalBand />}
             delay={0}
@@ -541,7 +594,7 @@ export default function Bento() {
       </BentoSection>
 
       {/* ── 04 For fun ───────────────────────────────────────────────────────── */}
-      <BentoSection num="04" title="For fun">
+      <BentoSection num="04" title="For fun" id="for-fun">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
           <LinkedMediaCard
             span="lg:col-span-2"
@@ -579,7 +632,7 @@ export default function Bento() {
       </BentoSection>
 
       {/* ── Stack ────────────────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-6">
+      <div className="grid grid-cols-1 gap-4 border-t border-line pt-6 lg:grid-cols-6">
         <Card span="lg:col-span-6" label="Stack" delay={0}>
           <ul className="mt-3 flex flex-wrap gap-1.5">
             {profile.skills.map((skill) => (
