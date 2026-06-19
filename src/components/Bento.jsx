@@ -448,6 +448,62 @@ function BlueGreenFlow() {
   );
 }
 
+function SwarmFanout() {
+  // Star fan-out: one orchestrator dispatches to five agents in parallel
+  // (copper pulses), whose findings converge on a single synthesis step
+  // (green pulses). Matches the dispatch → merge story of the write-up.
+  const orch = { x: 44, y: 88 };
+  const synth = { x: 286, y: 88 };
+  const ax = 176; // agent column x
+  const ys = [26, 57, 88, 119, 150]; // five agent nodes, vertically fanned
+  return (
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_45%_50%,rgba(201,126,78,0.12),transparent_65%)]">
+      <svg viewBox="0 0 320 176" className="absolute inset-0 h-full w-full">
+        {/* spokes: orchestrator → agents (copper, with underglow) */}
+        {ys.map((y, i) => (
+          <g key={`o-${i}`}>
+            <line x1={orch.x} y1={orch.y} x2={ax} y2={y} stroke="rgba(201,126,78,0.20)" strokeWidth="3" strokeLinecap="round" />
+            <line x1={orch.x} y1={orch.y} x2={ax} y2={y} stroke="#c97e4e" strokeWidth="1" strokeLinecap="round" opacity="0.8" />
+          </g>
+        ))}
+        {/* converge: agents → synthesis */}
+        {ys.map((y, i) => (
+          <line key={`s-${i}`} x1={ax} y1={y} x2={synth.x} y2={synth.y} stroke="rgba(242,240,234,0.12)" strokeWidth="1.2" />
+        ))}
+        {/* dispatch pulses (copper, outbound) */}
+        {ys.map((y, i) => (
+          <circle key={`pd-${i}`} r="2.2" fill="#e0a075">
+            <animateMotion dur="1.9s" begin={`${i * 0.12}s`} repeatCount="indefinite" path={`M${orch.x},${orch.y} L${ax},${y}`} />
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="1.9s" begin={`${i * 0.12}s`} repeatCount="indefinite" />
+          </circle>
+        ))}
+        {/* result pulses (green, converging) */}
+        {ys.map((y, i) => (
+          <circle key={`pr-${i}`} r="2" fill="#5dbf8a">
+            <animateMotion dur="2s" begin={`${0.95 + i * 0.12}s`} repeatCount="indefinite" path={`M${ax},${y} L${synth.x},${synth.y}`} />
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="2s" begin={`${0.95 + i * 0.12}s`} repeatCount="indefinite" />
+          </circle>
+        ))}
+        {/* agent nodes */}
+        {ys.map((y, i) => (
+          <rect key={`a-${i}`} x={ax - 11} y={y - 8} width="22" height="16" rx="5"
+            fill="rgba(242,240,234,0.05)" stroke="rgba(242,240,234,0.16)" strokeWidth="1" />
+        ))}
+        {/* orchestrator (pulsing) */}
+        <circle cx={orch.x} cy={orch.y} r="13" fill="none" stroke="rgba(201,126,78,0.4)" strokeWidth="1">
+          <animate attributeName="r" values="13;19;13" dur="2.6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.5;0;0.5" dur="2.6s" repeatCount="indefinite" />
+        </circle>
+        <rect x={orch.x - 15} y={orch.y - 15} width="30" height="30" rx="8" fill="rgba(201,126,78,0.14)" stroke="#c97e4e" strokeWidth="1.2" />
+        <text x={orch.x} y={orch.y + 3} textAnchor="middle" fontSize="8" fill="#c97e4e" fontFamily="JetBrains Mono, monospace">orch</text>
+        {/* synthesis (merge) */}
+        <rect x={synth.x - 16} y={synth.y - 13} width="32" height="26" rx="7" fill="rgba(93,191,138,0.10)" stroke="rgba(93,191,138,0.5)" strokeWidth="1.2" />
+        <text x={synth.x} y={synth.y + 3} textAnchor="middle" fontSize="8" fill="#5dbf8a" fontFamily="JetBrains Mono, monospace">merge</text>
+      </svg>
+    </div>
+  );
+}
+
 // ── Section header ─────────────────────────────────────────────────────────────
 function BentoSection({ num, title, id, children }) {
   return (
@@ -555,7 +611,7 @@ export default function Bento() {
             delay={80}
           />
           <Card
-            span="lg:col-span-6"
+            span="lg:col-span-4"
             href="https://ray98872.github.io/iot-lakehouse/"
             label="Data engineering"
             title="IoT Anomaly Detection Lakehouse"
@@ -563,6 +619,16 @@ export default function Bento() {
             meta="docker · pyspark · minio · write-up"
             graphic={<LakehouseFlow />}
             delay={160}
+          />
+          <Card
+            span="lg:col-span-2"
+            href="https://ray98872.github.io/swarm/writeup/"
+            label="Multi-agent · RAG · SSE"
+            title="Research Agent Swarm"
+            desc="Five specialist agents fan out in parallel over a technical question — web search, docs, benchmarks, community signals and risk — then a synthesis agent merges their findings into a cited report."
+            meta="python · groq · fastapi · sse · write-up"
+            graphic={<SwarmFanout />}
+            delay={240}
           />
         </div>
       </BentoSection>

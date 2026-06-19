@@ -1,26 +1,36 @@
-# ray98872.github.io
+# Personal site
 
-Personal portfolio — dark bento grid, React + Vite + Tailwind CSS v4, Lenis smooth
-scrolling. Deployed automatically to GitHub Pages via Actions on every push to `main`.
+Editorial dark personal CV/portfolio. React + Vite + Tailwind CSS v4. Fraunces serif display type, copper accents, Lenis smooth scrolling, custom cursor, marquee, line-mask reveals.
 
 ## Run locally
 
-Requires Node.js 20+.
+Requires [Node.js](https://nodejs.org) 20+.
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Edit content
+Open http://localhost:5173.
 
-- `src/data/profile.js` — name, role, skills, experience, education, socials, email
-- `src/components/Bento.jsx` — project cards (each card is bespoke, with its own graphic)
+## Edit your content
 
-## Research papers
+All content lives in two files — no need to touch components:
 
-The dissertation PDFs live in `public/papers/` and are served at `/papers/...`.
+- `src/data/profile.js` — name, role, tagline, about, skills, experience, socials, portal URL
+- `src/data/projects.js` — project cards
 
-## Related
+Drop your CV at `public/cv.pdf` to make the download button work.
 
-- [homelab](https://github.com/ray98872/homelab) — the home server write-up linked from the grid
+## Deploy (Cloudflare Pages)
+
+1. Push this folder to a GitHub repo.
+2. Cloudflare dashboard → Workers & Pages → Create → Pages → connect the repo.
+3. Build command: `npm run build` — output directory: `dist`.
+4. Optional: add your custom domain under the project's Custom domains tab.
+
+## Home server portal
+
+`portalUrl` in `src/data/profile.js` points to the lock icon in the nav and the
+`portal --auth` link in the footer. Set it to your Cloudflare Tunnel hostname
+(e.g. `https://portal.yourdomain.com`) once that's set up.
