@@ -672,7 +672,7 @@ export default function Bento() {
             graphic={<ComfyUIGraph />}
             delay={0}
           >
-            <GpuAudioPlayer src="/someaudioimade.mp3" caption="composed after Dark Souls III · Metroid Fusion" />
+            <GpuAudioPlayer src="/generated-music.mp3" caption="composed after Dark Souls III · Metroid Fusion" />
           </LinkedMediaCard>
           <Card
             span="lg:col-span-2"
